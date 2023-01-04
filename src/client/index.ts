@@ -1,5 +1,5 @@
-import connectToWhatsApp from "./connection/index"
 import CommandsStorage from "./utils/command/storage"
+import connectToWhatsApp from "./connection/index"
 import handleCommands from "./handlers/commands"
 import handleEvents from "./handlers/events"
 

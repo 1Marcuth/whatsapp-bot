@@ -1,11 +1,12 @@
 import { proto } from "@adiwajshing/baileys"
-import fs from "fs"
 import path from "path"
-import IMessageContext from "../../interfaces/message/context"
-import IMessageParseModes from "../../interfaces/message/parse-modes"
+import fs from "fs"
 
 import { extractCommandAndOptions, formatHtmlToMarkdown } from "./content"
 import extractDataFromWebMessage from "./data"
+
+import IMessageParseModes from "../../interfaces/message/parse-modes"
+import IMessageContext from "../../interfaces/message/context"
 
 function getMessageContext(
     socket: any,
@@ -49,7 +50,7 @@ function getMessageContext(
         const params = caption
             ? {
                 image,
-                caption: `${caption}`,
+                caption: caption,
             }
             : { image }
 
@@ -154,6 +155,31 @@ function getMessageContext(
         )
     }
 
+    async function addReaction(emoji: string) {
+        return socket.sendMessage(
+            webMessage.key.remoteJid,
+            {
+                react: {
+                    text: emoji,
+                    key: webMessage.key
+                }
+            }
+        )
+    }
+
+    async function removeReaction() {
+        return socket.sendMessage(
+            webMessage.key.remoteJid,
+            {
+                react: {
+                    text: "",
+                    key: webMessage.key
+                }
+            }
+        )
+    }
+
+
     const {
         messageText,
         isImage,
@@ -174,6 +200,8 @@ function getMessageContext(
         sendAudio,
         sendDocument,
         replyText,
+        addReaction,
+        removeReaction,
         remoteJid,
         userJid,
         replyJid,

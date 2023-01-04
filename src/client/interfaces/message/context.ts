@@ -30,6 +30,10 @@ interface IMessageContext {
 
     replyText: (text: string, parseMode?: IMessageParseModes) => Promise<proto.WebMessageInfo>
 
+    addReaction: (emoji: string) => Promise<proto.WebMessageInfo>
+
+    removeReaction: () => Promise<proto.WebMessageInfo>
+
     socket: any
     remoteJid: string | null | undefined
     replyJid: string | null
