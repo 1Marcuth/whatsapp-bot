@@ -1,16 +1,16 @@
 {
-  "name": "whatsapp-bot",
+  "name": "whatsapp-bot-template",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node ./src/index.ts",
     "dev:reload": "nodemon ./src/index.ts",
-    "build": "tsc --declaration"
+    "build": "tsc --declaration",
+    "start": "node ./dist/index.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["bot", "whatsapp", "template", "baileys"],
+  "author": "Marcuth",
   "license": "ISC",
   "dependencies": {
     "@adiwajshing/baileys": "^5.0.0",

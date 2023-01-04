@@ -31,7 +31,6 @@ class CommandWrapper {
                         return `<code>- ${option.i + 1} : ${option.name} [${option.type}]</code> | <b><i>${commandOption?.description}</i></b><br>`
                     })
                         .join("")
-                        .trim()
 
                     return await context.replyText(optionsErrorMessage, "html")
                 }
@@ -40,7 +39,6 @@ class CommandWrapper {
             } else {
                 const optionsMenu = this.command.options.map((option, i) => `- ${i + 1} : <code>${option.name} [${option.type}]</code> | <b><i>${option.description}</i></b><br>`)
                     .join("")
-                    .trim()
                 return await context.replyText(`<code>Send the options:</code><br><br>${optionsMenu}`, "html")
             }
         }
