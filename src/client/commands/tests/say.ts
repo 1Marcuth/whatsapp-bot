@@ -22,7 +22,7 @@ export const command: ICommand = {
         const inputQuantity = options?.getParsedValue("input-quantity")
 
         for (let i = 0; i < inputQuantity; i++) {
-            await context.sendText(`${inputText} - ${i}`)
+            await context.sendText(inputText)
         }
     }
 }

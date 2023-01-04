@@ -10,9 +10,9 @@ export const command: ICommand = {
         let message = `<b>${botName} menu</b><br><br>`
 
         for (const command of context.commands) {
-            message += `<code>${botPrefix}${command.name}</code> - <b><i>${command.description}</i></b>${command.options ? "<br>" + command.options.map((option, i) => {
+            message += `<code>${botPrefix}${command.name}</code> - <b><i>${command.description}</i></b><br>${command.options ? command.options.map((option, i) => {
                 return `    <code>- ${i + 1} : ${option.name}</code> | <i>${option.description}</i><br>`
-            }).join("") : "<br>"}`
+            }).join("") : ""}`
         }
 
         await context.replyText(message, "html")
