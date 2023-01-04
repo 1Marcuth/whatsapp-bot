@@ -14,8 +14,10 @@
   "license": "ISC",
   "dependencies": {
     "@adiwajshing/baileys": "^5.0.0",
+    "@hapi/boom": "^10.0.0",
     "@types/node": "^18.11.18",
-    "bot-command-options-parser": "^1.0.2"
+    "bot-command-options-parser": "^1.0.2",
+    "qrcode-terminal": "^0.12.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.20",
