@@ -155,30 +155,29 @@ function getMessageContext(
         )
     }
 
-    async function addReaction(emoji: string) {
+    async function addReaction(emoji: string, key: proto.IMessageKey = webMessage.key) {
         return socket.sendMessage(
             webMessage.key.remoteJid,
             {
                 react: {
                     text: emoji,
-                    key: webMessage.key
+                    key: key
                 }
             }
         )
     }
 
-    async function removeReaction() {
+    async function removeReaction(key: proto.IMessageKey = webMessage.key) {
         return socket.sendMessage(
             webMessage.key.remoteJid,
             {
                 react: {
                     text: "",
-                    key: webMessage.key
+                    key: key
                 }
             }
         )
     }
-
 
     const {
         messageText,

@@ -18,9 +18,27 @@ class CommandWrapper {
             
             if (context.options.length > 0) {
                 optionsValidateResult = optionsParser.validateOptions(context.options)
+
+                let optionsError: any[] = []
+                
+                optionsValidateResult.forEach((option, i) => {
+                    if (!option.isValid.value) optionsError.push({ i, ...option })
+                })
+
+                if (optionsError.length > 0) {
+                    const optionsErrorMessage = "<code>Options Error:</code><br><br>" + optionsError.map((option) => {
+                        const commandOption = this.command.options?.find(opt => opt.name === option.name)
+                        return `<code>- ${option.i + 1} : ${option.name} [${option.type}]</code> | <b><i>${commandOption?.description}</i></b><br>`
+                    })
+                        .join("")
+                        .trim()
+
+                    return await context.replyText(optionsErrorMessage, "html")
+                }
+
                 return await this.command.run(context, optionsValidateResult)
             } else {
-                const optionsMenu = this.command.options.map((option, i) => `- <code>${i} : ${option.name} [${option.type}]</code> | <b><i>${option.description}</i></b><br>`)
+                const optionsMenu = this.command.options.map((option, i) => `- ${i + 1} : <code>${option.name} [${option.type}]</code> | <b><i>${option.description}</i></b><br>`)
                     .join("")
                     .trim()
                 return await context.replyText(`<code>Send the options:</code><br><br>${optionsMenu}`, "html")
