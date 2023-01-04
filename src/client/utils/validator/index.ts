@@ -1,14 +1,14 @@
 import { GroupParticipant, isJidGroup } from "@adiwajshing/baileys"
 import IMessageContext from "../../interfaces/message/context"
 
-async function isSuperAdmin(botData: IMessageContext) {
-    return await validate("superadmin", botData)
+async function isSuperAdmin(messageContext: IMessageContext) {
+    return await validate("superadmin", messageContext)
 }
 
-async function isAdmin(botData: IMessageContext) {
+async function isAdmin(messageContext: IMessageContext) {
     return (
-        (await validate("admin", botData)) ||
-        (await validate("superadmin", botData))
+        (await validate("admin", messageContext)) ||
+        (await validate("superadmin", messageContext))
     )
 }
 
