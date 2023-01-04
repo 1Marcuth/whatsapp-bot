@@ -1,8 +1,10 @@
 import CommandOptionsParser from "bot-command-options-parser/dist"
+import CommandOptionsStorage from "./options/sorage"
 
 import IValidateResult from "bot-command-options-parser/dist/interfaces/validate-result"
 import ICommand from "../../interfaces/command"
 import IMessageContext from "../../interfaces/message/context"
+
 
 class CommandWrapper {
     public command: ICommand
@@ -29,16 +31,17 @@ class CommandWrapper {
                     const optionsErrorMessage = "<code>Options Error:</code><br><br>" + optionsError.map((option) => {
                         const commandOption = this.command.options?.find(opt => opt.name === option.name)
                         return `<code>- ${option.i + 1} : ${option.name} [${option.type}]</code> | <b><i>${commandOption?.description}</i></b><br>`
-                    })
-                        .join("")
+                    }).join("")
 
                     return await context.replyText(optionsErrorMessage, "html")
                 }
 
-                return await this.command.run(context, optionsValidateResult)
+                const optionsStorage = new CommandOptionsStorage(optionsValidateResult)
+
+                return await this.command.run(context, optionsStorage)
             } else {
-                const optionsMenu = this.command.options.map((option, i) => `- ${i + 1} : <code>${option.name} [${option.type}]</code> | <b><i>${option.description}</i></b><br>`)
-                    .join("")
+                const optionsMenu = this.command.options.map((option, i) => `- ${i + 1} : <code>${option.name} [${option.type}]</code> | <b><i>${option.description}</i></b><br>`).join("")
+
                 return await context.replyText(`<code>Send the options:</code><br><br>${optionsMenu}`, "html")
             }
         }

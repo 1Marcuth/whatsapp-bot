@@ -1,5 +1,7 @@
 import { proto } from "@adiwajshing/baileys"
 
+import ICommand from "../command"
+
 import IMessageParseModes from "./parse-modes"
 
 interface IMessageContext {
@@ -34,6 +36,7 @@ interface IMessageContext {
 
     removeReaction: (key?: proto.IMessageKey) => Promise<proto.WebMessageInfo>
 
+    commands?: ICommand[]
     socket: any
     remoteJid: string | null | undefined
     replyJid: string | null

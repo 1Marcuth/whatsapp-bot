@@ -12,6 +12,7 @@ export const event: IEvent = {
     name: "messages.upsert",
     type: "on",
     run: async (socket: any, message: IMessageData, commandsStorage: CommandsStorage) => {
+        const commands = commandsStorage.commands
         const [ webMessage ] = message.messages
 
         const { command, ...context } = getMessageContext(socket, webMessage)
@@ -24,7 +25,7 @@ export const event: IEvent = {
 
             if (commandObject) {
                 const commandWrapper = new CommandWrapper(commandObject)
-                return await commandWrapper.run({ command, ...context })
+                return await commandWrapper.run({ commands, command, ...context })
             }
 
             await context.replyText(`The Command <code>${botPrefix}${commandName}</code> not exists`, "html")
