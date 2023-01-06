@@ -6,7 +6,7 @@ function extractCommandAndOptions(messageContent: string) {
     let [command, ...options] = messageContent
         .slice(bot.prefix.length)
         .trim()
-        .split(" ")
+        .split(bot.commands.optionsSeparator)
 
     command = command.toLocaleLowerCase()
     options = parseOptions(options)
@@ -17,11 +17,7 @@ function extractCommandAndOptions(messageContent: string) {
     }
 
     function parseOptions(options: string[]) {
-        if (!options.join(" ").includes(bot.commands.optionsSeparator)) return [options.join(" ").trim()]
-
         options = options
-            .join(" ")
-            .split(bot.commands.optionsSeparator)
             .map(option => option.trim())
             .filter(option => option !== "")
 
