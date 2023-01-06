@@ -2,16 +2,17 @@ import { proto } from "@adiwajshing/baileys"
 import path from "path"
 import fs from "fs"
 
-import { extractCommandAndOptions, formatHtmlToMarkdown } from "./content"
-import extractDataFromWebMessage from "./data"
+import { extractCommandAndOptions, formatHtmlToMarkdown } from "../content"
+import extractDataFromWebMessage from "../data"
+import getGroupContext from "./group/index"
 
-import IMessageParseModes from "../../interfaces/message/parse-modes"
-import IMessageContext from "../../interfaces/message/context"
+import IMessageParseModes from "../../../interfaces/message/parse-modes"
+import IMessageContext from "../../../interfaces/message/context/index"
 
-function getMessageContext(
+async function getMessageContext(
     socket: any,
     webMessage: proto.IWebMessageInfo
-): IMessageContext {
+): Promise<IMessageContext> {
     const { remoteJid } = webMessage.key
 
     async function sendText(text: string, parseMode: IMessageParseModes = "markdown") {
@@ -123,7 +124,7 @@ function getMessageContext(
     ) {
         let options = {}
 
-        const fileName = path.basename( pathOfFile)
+        const fileName = path.basename(pathOfFile)
 
         if (isReply) {
             options = {
@@ -179,6 +180,8 @@ function getMessageContext(
         )
     }
 
+    const group = await getGroupContext(socket, webMessage.key)
+
     const {
         messageText,
         isImage,
@@ -201,6 +204,7 @@ function getMessageContext(
         replyText,
         addReaction,
         removeReaction,
+        group,
         remoteJid,
         userJid,
         replyJid,

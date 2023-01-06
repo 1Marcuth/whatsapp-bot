@@ -1,8 +1,9 @@
 import { proto } from "@adiwajshing/baileys"
 
-import ICommand from "../command"
+import ICommand from "../../command"
 
-import IMessageParseModes from "./parse-modes"
+import IMessageParseModes from "../parse-modes"
+import IGroupContext from "./group"
 
 interface IMessageContext {
     sendText: (text: string, parseMode?: IMessageParseModes) => Promise<proto.WebMessageInfo>
@@ -35,6 +36,8 @@ interface IMessageContext {
     addReaction: (emoji: string, key?: proto.IMessageKey) => Promise<proto.WebMessageInfo>
 
     removeReaction: (key?: proto.IMessageKey) => Promise<proto.WebMessageInfo>
+
+    group: IGroupContext
 
     commands?: ICommand[]
     socket: any

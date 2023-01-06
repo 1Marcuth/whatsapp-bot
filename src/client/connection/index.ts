@@ -1,6 +1,10 @@
-import makeWASocket, { DisconnectReason, useMultiFileAuthState } from "@adiwajshing/baileys"
+import makeWASocket, {
+    DisconnectReason,
+    useMultiFileAuthState
+} from "@adiwajshing/baileys"
 import { Boom } from "@hapi/boom"
 import path from "path"
+import { bot} from "../settings"
 
 async function connectToWhatsApp() {
     const { state, saveCreds } = await useMultiFileAuthState(path.resolve(__dirname, "..", "..", "..", "cache", "auth-info-multi"))
@@ -9,6 +13,7 @@ async function connectToWhatsApp() {
         printQRInTerminal: true,
         auth: state
     })
+
     socket.ev.on("connection.update", async (update) => {
         const { connection, lastDisconnect } = update
 
@@ -17,11 +22,13 @@ async function connectToWhatsApp() {
 
             console.log(`> [client] Connection closed due to ${lastDisconnect?.error} reconnecting ${shouldReconnect}`)
 
-            if (shouldReconnect) {
-                connectToWhatsApp()
-            }
-        } else if(connection === "open") {
-            console.log("opened connection")
+            if (shouldReconnect) await connectToWhatsApp()
+
+        } else if (connection === "open") {
+            console.log("> [client] Opened connection")
+
+            await socket.updateProfileName(bot.name)
+            await socket.updateProfileStatus(bot.description)
         }
     })
 

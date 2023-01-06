@@ -13,8 +13,18 @@ export const command: ICommand = {
         }, 5000)
 
         setTimeout(async () => {
+            console.log("Changing reaction")
+            await context.addReaction("🗿")
+        }, 10000)
+
+        setTimeout(async () => {
+            console.log("Changing reaction")
+            await context.addReaction("🍷")
+        }, 15000)
+
+        setTimeout(async () => {
             console.log("Removing reaction")
             await context.removeReaction()
-        }, 10000)
+        }, 20000)
     }
 }

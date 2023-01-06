@@ -20,6 +20,10 @@ export const command: ICommand = {
     run: async (context, options) => {
         const inputText = options?.getParsedValue("input-text")
         const inputQuantity = options?.getParsedValue("input-quantity")
+        
+        if (inputQuantity > 10) {
+            return await context.replyText("<code>ERROR:</code> <b>YOU WANT ME TO SEND TOO MANY MESSAGES!</b>", "html")
+        }
 
         for (let i = 0; i < inputQuantity; i++) {
             await context.sendText(inputText)

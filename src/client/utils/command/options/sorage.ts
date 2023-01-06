@@ -1,5 +1,4 @@
-import IOption from "bot-command-options-parser/dist/interfaces/option";
-import IValidateResult from "bot-command-options-parser/dist/interfaces/validate-result";
+import IValidateResult from "bot-command-options-parser/dist/interfaces/validate-result"
 
 class CommandOptionsStorage {
     private options: IValidateResult[]

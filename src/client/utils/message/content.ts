@@ -1,17 +1,32 @@
-import { botPrefix } from "../../settings"
+import { bot } from "../../settings"
 
 function extractCommandAndOptions(messageContent: string) {
     if (!messageContent) return { command: "", options: [] }
 
-    let [ command, ...options ] = messageContent
-        .toLowerCase()
+    let [command, ...options] = messageContent
+        .slice(bot.prefix.length)
         .trim()
-        //.slice(botPrefix.length)
         .split(" ")
 
-    options = options.filter(option => option.trim() !== "")
+    command = command.toLocaleLowerCase()
+    options = parseOptions(options)
 
-    return { command, options }
+    return {
+        command,
+        options
+    }
+
+    function parseOptions(options: string[]) {
+        if (!options.join(" ").includes(bot.commands.optionsSeparator)) return [options.join(" ").trim()]
+
+        options = options
+            .join(" ")
+            .split(bot.commands.optionsSeparator)
+            .map(option => option.trim())
+            .filter(option => option !== "")
+
+        return options
+    }
 }
 
 function formatHtmlToMarkdown(originalText: string) {
@@ -83,25 +98,25 @@ function formatHtmlToMarkdown(originalText: string) {
 
     let formatedText = String(originalText)
 
-    for (const tagToMdConfig of formaterConfig) {
-        const openTag = `<${tagToMdConfig.tag.name}>`
-        const closeTag = `</${tagToMdConfig.tag.name}>`
+    for (const tagToMarkdowndConfig of formaterConfig) {
+        const openTag = `<${tagToMarkdowndConfig.tag.name}>`
+        const closeTag = `</${tagToMarkdowndConfig.tag.name}>`
 
-        const openTagExp = new RegExp(openTag, "gi")
-        const closeTagExp = new RegExp(closeTag, "gi")
+        const openTagExpression = new RegExp(openTag, "gi")
+        const closeTagExpression = new RegExp(closeTag, "gi")
 
         if (originalText.includes(openTag) || originalText.includes(closeTag)) {
-            formatedText = formatedText.replace(openTagExp, tagToMdConfig.markdown)
+            formatedText = formatedText.replace(openTagExpression, tagToMarkdowndConfig.markdown)
 
-            if (tagToMdConfig.tag.needClose) {
-                const matchedOpenTags = originalText.match(openTagExp)
-                const matchedCloseTags = originalText.match(closeTagExp)
+            if (tagToMarkdowndConfig.tag.needClose) {
+                const matchedOpenTags = originalText.match(openTagExpression)
+                const matchedCloseTags = originalText.match(closeTagExpression)
 
                 if (!matchedCloseTags || !matchedOpenTags || matchedOpenTags.length !== matchedCloseTags.length) {
                     throw new SyntaxError("Possibly there are tags that have not been opened or closed")
                 }
 
-                formatedText = formatedText.replace(closeTagExp, tagToMdConfig.markdown)
+                formatedText = formatedText.replace(closeTagExpression, tagToMarkdowndConfig.markdown)
             }
         }
     }

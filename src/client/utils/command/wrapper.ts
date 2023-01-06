@@ -5,7 +5,6 @@ import IValidateResult from "bot-command-options-parser/dist/interfaces/validate
 import ICommand from "../../interfaces/command"
 import IMessageContext from "../../interfaces/message/context"
 
-
 class CommandWrapper {
     public command: ICommand
 
@@ -15,6 +14,9 @@ class CommandWrapper {
 
     public async run(context: IMessageContext) {
         if (this.command.options) {
+
+            console.log("Running command", context.command)
+
             const optionsParser = new CommandOptionsParser(this.command.options)
             let optionsValidateResult: IValidateResult[]
             
