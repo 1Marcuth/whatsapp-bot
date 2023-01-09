@@ -4,18 +4,18 @@ import handleCommands from "./handlers/commands"
 import handleEvents from "./handlers/events"
 
 function createClient() {
-    let socket: any
     const commands = new CommandsStorage()
-    
+    let socket: any
+
     async function connect() {
         socket = await connectToWhatsApp()
     }
 
-    async function setCommandHandler() {
+    async function useCommandHandler() {
         await handleCommands(commands)
     }
 
-    async function setEventsHandler() {
+    async function useEventsHandler() {
         await handleEvents(socket, { commands })
     }
 
@@ -23,8 +23,8 @@ function createClient() {
         console.log("> [client] Starting...")
 
         await connect()
-        await setCommandHandler()
-        await setEventsHandler()
+        await useCommandHandler()
+        await useEventsHandler()
 
         console.log("> [client] Started successfully!")
     }

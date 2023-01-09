@@ -8,12 +8,20 @@ function extractCommandAndOptions(messageContent: string) {
         .trim()
         .split(bot.commands.optionsSeparator)
 
-    command = command.toLocaleLowerCase()
+    command = parseCommand(command)
     options = parseOptions(options)
 
     return {
         command,
         options
+    }
+
+    function parseCommand(command: string) {
+        command = command
+            .toLocaleLowerCase()
+            .trim()
+            
+        return command
     }
 
     function parseOptions(options: string[]) {

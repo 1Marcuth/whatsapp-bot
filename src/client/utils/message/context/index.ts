@@ -151,7 +151,7 @@ async function getMessageContext(
 
         return socket.sendMessage(
             webMessage.key.remoteJid,
-            { text: `${text}` },
+            { text: text },
             { quoted: webMessage }
         )
     }

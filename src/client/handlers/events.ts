@@ -26,9 +26,8 @@ export default async (socket: any, kwargs: any) => {
                 } else {
                     socket.ev.on(event.name, (context: any) => event.run(socket, context, kwargs.commands))
                 }
-                
 
-                console.log(`> [client] Event ${event.name} loaded`)
+                console.log(`> [client] Event '${event.name}' loaded`)
             }
         })
 

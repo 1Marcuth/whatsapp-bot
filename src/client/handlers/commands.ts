@@ -29,9 +29,9 @@ export default async (commandsStorage: CommandsStorage) => {
                     loadCommand(command)
 
                     function loadCommand(command: ICommand) {
-                        commandsStorage.command(command)
+                        commandsStorage.add(command)
 
-                        console.log(`> [client] Command ${command.name} loaded`)
+                        console.log(`> [client] Command '${command.name}' loaded`)
                     }
                 })
         })

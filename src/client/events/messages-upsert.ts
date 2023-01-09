@@ -24,18 +24,17 @@ export const event: IEvent = {
 
         const { command, ...context } = await getMessageContext(socket, webMessage)
 
+        const commandObject = commandsStorage.get(command)
+
+        if (commandObject) {
+            const commandWrapper = new CommandWrapper(commandObject)
+            return await commandWrapper.run({ commands, command, ...context })
+        }
+
         try {
-            const commandObject = commandsStorage.getCommand(command)
-
-            if (commandObject) {
-                const commandWrapper = new CommandWrapper(commandObject)
-                return await commandWrapper.run({ commands, command, ...context })
-            }
-
             await context.replyText(`The Command <code>${bot.prefix}${command}</code> not exists`, "html")
         } catch (error) {
-            console.error(error)
-            //await context.replyText(`${(error as any).message}`)
+            console.log(error)
             await context.replyText(`Ocorreu um erro ao tentar executar o comando <code>${command}</code>`, "html")
         }
     }

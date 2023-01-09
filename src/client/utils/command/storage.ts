@@ -5,12 +5,12 @@ import ICommand from "../../interfaces/command"
 class CommandsStorage {
     public commands: ICommand[] = []
 
-    public getCommand(name: string) {
+    public get(name: string) {
         return this.commands.find(command => command.name === name)
     }
 
-    public command(command: ICommand) {
-        if (this.getCommand(command.name)) {
+    public add(command: ICommand) {
+        if (this.get(command.name)) {
             throw new Error(`The command '${command.name}' has been duplicated!`)
         }
 
