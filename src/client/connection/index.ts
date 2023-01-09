@@ -7,7 +7,7 @@ import path from "path"
 import { bot} from "../settings"
 
 async function connectToWhatsApp() {
-    const { state, saveCreds } = await useMultiFileAuthState(path.resolve(__dirname, "..", "..", "..", "cache", "auth-info-multi"))
+    const { state, saveCreds } = await useMultiFileAuthState(path.resolve(__dirname, "..", "..", "..", ".cache", "auth-info-multi"))
 
     const socket = makeWASocket({
         printQRInTerminal: true,
