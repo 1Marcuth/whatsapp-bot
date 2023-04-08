@@ -7,7 +7,9 @@
     "dev": "ts-node ./src/index.ts",
     "dev:reload": "nodemon ./src/index.ts",
     "build": "tsc --declaration",
-    "start": "node ./dist/index.js"
+    "start": "node ./dist/index.js",
+    "clear-cache": "rmdir .cache\\auth-info-multi /s",
+    "logout:dev": "npm run clear-cache && npm run dev"
   },
   "keywords": ["bot", "whatsapp", "template", "baileys"],
   "author": "Marcuth",

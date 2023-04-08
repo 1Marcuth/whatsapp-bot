@@ -33,7 +33,7 @@ interface IMessageContext {
 
     replyText: (text: string, parseMode?: IMessageParseModes) => Promise<proto.WebMessageInfo>
 
-    addReaction: (emoji: string, key?: proto.IMessageKey) => Promise<proto.WebMessageInfo>
+    setReaction: (emoji: string, key?: proto.IMessageKey) => Promise<proto.WebMessageInfo>
 
     removeReaction: (key?: proto.IMessageKey) => Promise<proto.WebMessageInfo>
 

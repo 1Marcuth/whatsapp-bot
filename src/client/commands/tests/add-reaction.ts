@@ -5,21 +5,21 @@ export const command: ICommand = {
     description: "Adiciona uma reação",
     run: async (context) => {
         console.log("Adding reaction")
-        await context.addReaction("😃")
+        await context.setReaction("😃")
 
         setTimeout(async () => {
             console.log("Changing reaction")
-            await context.addReaction("🤓")
+            await context.setReaction("🤓")
         }, 5000)
 
         setTimeout(async () => {
             console.log("Changing reaction")
-            await context.addReaction("🗿")
+            await context.setReaction("🗿")
         }, 10000)
 
         setTimeout(async () => {
             console.log("Changing reaction")
-            await context.addReaction("🍷")
+            await context.setReaction("🍷")
         }, 15000)
 
         setTimeout(async () => {

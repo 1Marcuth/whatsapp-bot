@@ -156,7 +156,7 @@ async function getMessageContext(
         )
     }
 
-    async function addReaction(emoji: string, key: proto.IMessageKey = webMessage.key) {
+    async function setReaction(emoji: string, key: proto.IMessageKey = webMessage.key) {
         return socket.sendMessage(
             webMessage.key.remoteJid,
             {
@@ -169,15 +169,7 @@ async function getMessageContext(
     }
 
     async function removeReaction(key: proto.IMessageKey = webMessage.key) {
-        return socket.sendMessage(
-            webMessage.key.remoteJid,
-            {
-                react: {
-                    text: "",
-                    key: key
-                }
-            }
-        )
+        return await setReaction("", key)
     }
 
     const group = await getGroupContext(socket, webMessage.key)
@@ -202,7 +194,7 @@ async function getMessageContext(
         sendAudio,
         sendDocument,
         replyText,
-        addReaction,
+        setReaction,
         removeReaction,
         group,
         remoteJid,

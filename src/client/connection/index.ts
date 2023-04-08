@@ -4,7 +4,15 @@ import makeWASocket, {
 } from "@adiwajshing/baileys"
 import { Boom } from "@hapi/boom"
 import path from "path"
-import { bot} from "../settings"
+
+import { bot } from "../settings"
+
+async function updateProfileInfo(socket: any) {
+    console.log("> [client] Updating bot profile information")
+
+    await socket.updateProfileName(bot.name)
+    await socket.updateProfileStatus(bot.description)
+}
 
 async function connectToWhatsApp() {
     const { state, saveCreds } = await useMultiFileAuthState(path.resolve(__dirname, "..", "..", "..", ".cache", "auth-info-multi"))
@@ -27,8 +35,10 @@ async function connectToWhatsApp() {
         } else if (connection === "open") {
             console.log("> [client] Opened connection")
 
-            await socket.updateProfileName(bot.name)
-            await socket.updateProfileStatus(bot.description)
+            setTimeout(
+                async () => await updateProfileInfo(socket),
+                15000
+            )
         }
     })
 

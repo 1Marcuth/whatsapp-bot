@@ -23,6 +23,6 @@ export const command: ICommand = {
 
         if (!isJidUser(jidUser)) return await context.replyText(`${jidUser} not is valid`)
 
-        await context.group.members.remove([ jidUser ])
+        await context.group.members?.remove([ jidUser ])
     }
 }

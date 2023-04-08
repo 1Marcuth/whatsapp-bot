@@ -14,7 +14,8 @@ export const command: ICommand = {
         }
     ],
     run: async (context, options) => {
-        if (!isJidGroup(context.remoteJid as string)) return await context.replyText("Current chat is not a group")
+        console.log(isJidGroup(context.remoteJid as string))
+        if (!isJidGroup(context.remoteJid as string)) return await context.replyText("[Error] O chat atual não é um grupo!")
 
         const phoneNumber = options?.getParsedValue("phone-number")
         console.log(phoneNumber)
@@ -22,6 +23,6 @@ export const command: ICommand = {
 
         if (!isJidUser(jidUser)) return await context.replyText(`${phoneNumber} not is valid`)
 
-        await context.group.members.add([ jidUser ])
+        await context.group.members?.add([ jidUser ])
     }
 }

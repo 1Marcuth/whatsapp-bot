@@ -1,4 +1,4 @@
-import { GroupMetadata, GroupParticipant, proto } from "@adiwajshing/baileys"
+import { GroupMetadata, GroupParticipant } from "@adiwajshing/baileys"
 import IOwer from "../../../../utils/message/context/group/ower"
 
 import IMembersContext from "./members/index"
@@ -12,8 +12,8 @@ interface IGroupContext {
 
     setDescription: (newDescription: string) => Promise<void>
 
-    id: string
-    name: string
+    id?: string
+    name?: string
     description?: string
     inviteUrl?: string
     creationTimestamp?: number
@@ -21,9 +21,9 @@ interface IGroupContext {
     size?: number
     isRestrict?: boolean
     isOfAnnounce?: boolean
-    ower: IOwer
-    membersList: GroupParticipant[]
-    members: IMembersContext
+    ower?: IOwer
+    membersList?: GroupParticipant[]
+    members?: IMembersContext
 }
 
 export default IGroupContext
