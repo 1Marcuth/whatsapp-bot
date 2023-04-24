@@ -8,7 +8,7 @@ import { isCommand } from "../utils/command/tools"
 import IMessageData from "../interfaces/message/data"
 import IEvent from "../interfaces/event/index"
 import { isJidGroup } from "@adiwajshing/baileys"
-import { errorMessage } from "../utils/message/message-template"
+import { errorMessage, warningMessage } from "../utils/message/message-template"
 
 export const event: IEvent = {
     name: "messages.upsert",
@@ -20,7 +20,15 @@ export const event: IEvent = {
         const { command, ...context } = await getMessageContext(socket, webMessage)
         const fullContext = { command, ...context }
 
-        if (messageContent?.includes("@everyone") && isJidGroup(context.remoteJid as string)) {
+        if (messageContent?.includes("@everyone")) {
+            if (!isJidGroup(context.remoteJid as string)) {
+                return await warningMessage(
+                    fullContext,
+                    "Marcação inválida",
+                    "Você não pode marcar todos fora de um grupo!"
+                )
+            }
+
             return await socket.sendMessage(context.remoteJid, {
                 text: `*Você foi marcado por _@${webMessage.pushName}_*`,
                 mentions: context.group.membersList?.map(member => member.id),
@@ -34,7 +42,11 @@ export const event: IEvent = {
         const commandObject = commandsStorage.get(command)
 
         if (!commandObject) {
-            return await errorMessage(fullContext, "Comando inexistente", `O comando ${bot.prefix}${command} não existe!`)
+            return await errorMessage(
+                fullContext,
+                "Comando inexistente",
+                `O comando ${bot.prefix}${command} não existe!`
+            )
         }
         
         const commandWrapper = new CommandWrapper(commandObject)
@@ -44,7 +56,12 @@ export const event: IEvent = {
             await commandWrapper.run({ commands, ...fullContext })
         } catch (error) {
             console.log(error)
-            return await errorMessage(fullContext, `Falha na execução do comando`, `Ocorreu um erro ao tentar executar o comando ${bot.prefix}${command}: ${(error as any).message}`)
+
+            return await errorMessage(
+                fullContext,
+                `Falha na execução do comando`,
+                `Ocorreu um erro ao tentar executar o comando ${bot.prefix}${command}: ${(error as any).message}`
+            )
         }
     }
 }

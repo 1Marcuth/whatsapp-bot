@@ -11,14 +11,19 @@
     "clear-cache": "rmdir .cache\\auth-info-multi /s",
     "logout:dev": "npm run clear-cache && npm run dev"
   },
-  "keywords": ["bot", "whatsapp", "template", "baileys"],
+  "keywords": [
+    "bot",
+    "whatsapp",
+    "template",
+    "baileys"
+  ],
   "author": "Marcuth",
   "license": "ISC",
   "dependencies": {
     "@adiwajshing/baileys": "^5.0.0",
     "@hapi/boom": "^10.0.0",
     "@types/node": "^18.11.18",
-    "bot-command-options-parser": "^1.0.2",
+    "bot-command-options-parser": "^1.0.5",
     "qrcode-terminal": "^0.12.0"
   },
   "devDependencies": {
