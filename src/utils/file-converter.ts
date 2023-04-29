@@ -12,7 +12,7 @@ async function docxToPdf(inputFilePath: string, outputDir: string): Promise<stri
 async function pdfToDocx(inputFilePath: string, outputDir: string): Promise<string> {
     const outputFileName = randString(10) + ".docx"
     const outputFilePath = path.join(outputDir, outputFileName)
-    const pythonScriptFilePath = path.resolve(__dirname, "..", "helper-scripts", "pdf-to-docx.py")
+    const pythonScriptFilePath = path.resolve(__dirname, "..", "..", "helper-scripts", "pdf-to-docx.py")
     const command = `python ${pythonScriptFilePath} ${inputFilePath} ${outputFilePath}`
     
     await new Promise((resolve, reject) => {
