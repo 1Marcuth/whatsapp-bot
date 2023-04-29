@@ -27,7 +27,7 @@ class CommandWrapper {
                 })
 
                 if (optionsError.length > 0) {
-                    const optionsErrorMessage = "<code>Options Error:</code><br><br>" + optionsError.map((option) => {
+                    const optionsErrorMessage = "<code>Erro de argumentos:</code><br><br>" + optionsError.map((option) => {
                         const commandOption = this.command.options?.find(opt => opt.name === option.name)
                         return `<code>- ${option.i + 1} : ${option.name} [${option.type}]</code> | <b><i>${commandOption?.description}</i></b><br>`
                     }).join("")
@@ -41,7 +41,7 @@ class CommandWrapper {
             } else {
                 const optionsMenu = this.command.options.map((option, i) => `- ${i + 1} : <code>${option.name} [${option.type}]</code> | <b><i>${option.description}</i></b><br>`).join("")
 
-                return await context.replyText(`<code>Send the options:</code><br><br>${optionsMenu}`, "html")
+                return await context.replyText(`<code>Envie os argumentos:</code><br><br>${optionsMenu}`, "html")
             }
         }
         

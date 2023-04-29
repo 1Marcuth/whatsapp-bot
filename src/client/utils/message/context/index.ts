@@ -1,4 +1,4 @@
-import { proto } from "@adiwajshing/baileys"
+import { proto, WASocket } from "@adiwajshing/baileys"
 import path from "path"
 import fs from "fs"
 
@@ -10,10 +10,11 @@ import IMessageParseModes from "../../../interfaces/message/parse-modes"
 import IMessageContext from "../../../interfaces/message/context/index"
 
 async function getMessageContext(
-    socket: any,
+    socket: WASocket,
     webMessage: proto.IWebMessageInfo
 ): Promise<IMessageContext> {
-    const { remoteJid } = webMessage.key
+    const remoteJid = webMessage.key.remoteJid as string
+    const botJid = "@" + (socket.user?.id as string).replace(":2", "")
 
     async function sendText(text: string, parseMode: IMessageParseModes = "markdown") {
         if (parseMode === "html") {
@@ -118,9 +119,43 @@ async function getMessageContext(
         )
     }
 
+    async function sendVideo(
+        pathOrBuffer: string | Buffer,
+        caption = "",
+        isReply = true,
+        captionParseMode: IMessageParseModes = "markdown"
+    ) {
+        if (captionParseMode === "html") {
+            caption = formatHtmlToMarkdown(caption)
+        }
+    
+        let options = {}
+    
+        if (isReply) {
+            options = {
+                quoted: webMessage,
+            }
+        }
+    
+        const video =
+            pathOrBuffer instanceof Buffer
+                ? pathOrBuffer
+                : fs.readFileSync(pathOrBuffer)
+    
+        const params = caption
+            ? {
+                video,
+                caption: caption,
+            }
+            : { video }
+    
+        return await socket.sendMessage(remoteJid, params, options)
+    }
+
     async function sendDocument(
         pathOfFile: string,
-        isReply = true
+        isReply = true,
+        mimetype: string = ""
     ) {
         let options = {}
 
@@ -137,8 +172,42 @@ async function getMessageContext(
         return await socket.sendMessage(
             remoteJid,
             {
+                mimetype,
                 document: { url: pathOfFile },
                 fileName
+            },
+            options
+        )
+    }
+
+    async function sendPoll(
+        name: string,
+        values: string[],
+        selectableCount: number,
+        isReply = true,
+        parseMode: IMessageParseModes = "markdown"
+    ) {
+        if (parseMode === "html") {
+            name = formatHtmlToMarkdown(name)
+            values = values.map(value => formatHtmlToMarkdown(value))
+        }
+
+        let options = {}
+
+        if (isReply) {
+            options = {
+                quoted: webMessage
+            }
+        }
+
+        return await socket.sendMessage(
+            remoteJid,
+            {
+                poll: {
+                    name,
+                    values,
+                    selectableCount
+                }
             },
             options
         )
@@ -149,16 +218,16 @@ async function getMessageContext(
             text = formatHtmlToMarkdown(text)
         }
 
-        return socket.sendMessage(
-            webMessage.key.remoteJid,
+        return await socket.sendMessage(
+            remoteJid,
             { text: text },
             { quoted: webMessage }
         )
     }
 
     async function setReaction(emoji: string, key: proto.IMessageKey = webMessage.key) {
-        return socket.sendMessage(
-            webMessage.key.remoteJid,
+        return await socket.sendMessage(
+            remoteJid,
             {
                 react: {
                     text: emoji,
@@ -170,6 +239,32 @@ async function getMessageContext(
 
     async function removeReaction(key: proto.IMessageKey = webMessage.key) {
         return await setReaction("", key)
+    }
+
+    async function sendTextMarkingEveryone(text: string, parseMode: IMessageParseModes = "markdown") {
+        if (parseMode === "html") {
+            text = formatHtmlToMarkdown(text)
+        }
+
+        return await socket.sendMessage(remoteJid, {
+            text: `${text}`,
+            mentions: group.membersList?.map(member => member.id)
+        })
+    }
+
+    async function replyTextMarkingEveryone(text: string, parseMode: IMessageParseModes = "markdown") {
+        if (parseMode === "html") {
+            text = formatHtmlToMarkdown(text)
+        }
+
+        return await socket.sendMessage(
+            remoteJid,
+            {
+                text: text,
+                mentions: group.membersList?.map(member => member.id)
+            },
+            { quoted: webMessage },
+        )
     }
 
     const group = await getGroupContext(socket, webMessage.key)
@@ -185,20 +280,25 @@ async function getMessageContext(
         replyJid
     } = extractDataFromWebMessage(webMessage)
 
-    const { command, options } = messageText ? extractCommandAndOptions(messageText.toLowerCase()) :  { command: "", options: [] }
+    const { command, options } = messageText ? extractCommandAndOptions(messageText) : { command: "", options: [] }
     
     return {
         sendText,
         sendImage,
         sendSticker,
         sendAudio,
+        sendVideo,
         sendDocument,
+        sendPoll,
         replyText,
         setReaction,
         removeReaction,
+        sendTextMarkingEveryone,
+        replyTextMarkingEveryone,
         group,
         remoteJid,
         userJid,
+        botJid,
         replyJid,
         socket,
         webMessage,
@@ -209,6 +309,7 @@ async function getMessageContext(
         isSticker,
         isAudio,
         isDocument,
+        messageText
     }
 }
 

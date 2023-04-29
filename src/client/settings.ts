@@ -1,10 +1,24 @@
 const bot = {
-    name: "Template Bot by Marcuth",
+    name: "Marcuth's butler",
     prefix: "/",
-    description: "A bot template by https://github.com/1Marcuth",
+    description: "Bot template made by Marcuth at https://github.com/1Marcuth",
     commands: {
         optionsSeparator: ":"
-    }
+    },
+    reconnectEvery: 4800000,
+    owers: []
 }
 
-export { bot }
+const reactionEmojis = {
+    waiting: "⌛",
+    error: "❌",
+    success: "✅"
+}
+
+const stickerSize = { width: 256, height: 256 }
+
+export {
+    bot,
+    reactionEmojis,
+    stickerSize
+}

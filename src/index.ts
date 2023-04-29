@@ -1,7 +1,13 @@
 import createClient from "./client"
 
-(async () => {
+async function start(): Promise<void> {
     const client = createClient()
 
-    await client.start()
-})()
+    try {
+        await client.start()
+    } catch(error: any) {
+        return start()
+    }
+}
+
+start()

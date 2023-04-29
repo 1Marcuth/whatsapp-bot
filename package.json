@@ -20,13 +20,21 @@
   "author": "Marcuth",
   "license": "ISC",
   "dependencies": {
-    "@adiwajshing/baileys": "^5.0.0",
+    "@adiwajshing/baileys": "github:WhiskeySockets/Baileys",
     "@hapi/boom": "^10.0.0",
     "@types/node": "^18.11.18",
+    "axios": "^1.3.6",
     "bot-command-options-parser": "^1.0.5",
-    "qrcode-terminal": "^0.12.0"
+    "cep-promise": "^4.4.0",
+    "convert-multiple-files": "^1.2.5",
+    "correios-brasil": "^3.0.4",
+    "qrcode-terminal": "^0.12.0",
+    "rembg-node": "^2.0.1",
+    "sharp": "^0.30.7",
+    "ytdl-core": "^4.10.0"
   },
   "devDependencies": {
+    "@types/sharp": "^0.31.1",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1"
   }

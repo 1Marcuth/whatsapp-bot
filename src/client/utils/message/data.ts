@@ -23,18 +23,15 @@ function extractDataFromWebMessage(message: proto.IWebMessageInfo) {
         const listTextMessage = message.message?.listResponseMessage
 
         const type1 = message.message?.conversation
-
         const type2 = extendedTextMessage?.text
-
         const type3 = message.message?.imageMessage?.caption
-
         const type4 = buttonTextMessage?.selectedButtonId
-
         const type5 = listTextMessage?.singleSelectReply?.selectedRowId
-
         const type6 = message?.message?.videoMessage?.caption
+        const type7 = message.message?.documentMessage?.caption
+        const type8 = message.message?.documentWithCaptionMessage?.message?.conversation
 
-        messageText = type1 || type2 || type3 || type4 || type5 || type6 || ""
+        messageText = type1 || type2 || type3 || type4 || type5 || type6 || type7 || type8 || ""
 
         isReply =
             !!extendedTextMessage && !!extendedTextMessage.contextInfo?.quotedMessage
@@ -53,13 +50,23 @@ function extractDataFromWebMessage(message: proto.IWebMessageInfo) {
 
     const isImage =
         !!tempMessage?.imageMessage ||
-        !!tempMessage?.extendedTextMessage?.contextInfo?.quotedMessage
-            ?.imageMessage
+        !!tempMessage?.extendedTextMessage?.contextInfo?.quotedMessage?.imageMessage ||
+        !!tempMessage?.viewOnceMessage?.message?.imageMessage ||
+        !!tempMessage?.extendedTextMessage?.contextInfo?.quotedMessage?.viewOnceMessage?.message?.imageMessage ||
+        !!tempMessage?.viewOnceMessageV2?.message?.imageMessage ||
+        !!tempMessage?.extendedTextMessage?.contextInfo?.quotedMessage?.viewOnceMessageV2?.message?.imageMessage ||
+        !!tempMessage?.viewOnceMessageV2Extension?.message?.imageMessage ||
+        !!tempMessage?.extendedTextMessage?.contextInfo?.quotedMessage?.viewOnceMessageV2Extension?.message?.imageMessage
 
     const isVideo =
         !!tempMessage?.videoMessage ||
-        !!tempMessage?.extendedTextMessage?.contextInfo?.quotedMessage
-            ?.videoMessage
+        !!tempMessage?.extendedTextMessage?.contextInfo?.quotedMessage?.videoMessage ||
+        !!tempMessage?.viewOnceMessage?.message?.videoMessage ||
+        !!tempMessage?.extendedTextMessage?.contextInfo?.quotedMessage?.viewOnceMessage?.message?.videoMessage ||
+        !!tempMessage?.viewOnceMessageV2?.message?.videoMessage ||
+        !!tempMessage?.extendedTextMessage?.contextInfo?.quotedMessage?.viewOnceMessageV2?.message?.videoMessage ||
+        !!tempMessage?.viewOnceMessageV2Extension?.message?.videoMessage ||
+        !!tempMessage?.extendedTextMessage?.contextInfo?.quotedMessage?.viewOnceMessageV2Extension?.message?.videoMessage
 
     const isAudio =
         !!tempMessage?.audioMessage ||
@@ -73,8 +80,10 @@ function extractDataFromWebMessage(message: proto.IWebMessageInfo) {
 
     const isDocument =
         !!tempMessage?.documentMessage ||
-        !!tempMessage?.extendedTextMessage?.contextInfo?.quotedMessage
-            ?.documentMessage
+        !!tempMessage?.extendedTextMessage?.contextInfo?.quotedMessage?.documentMessage ||
+        !!tempMessage?.documentWithCaptionMessage ||
+        !!tempMessage?.extendedTextMessage?.contextInfo?.quotedMessage?.documentWithCaptionMessage
+            
 
     let mentionedJid = ""
 

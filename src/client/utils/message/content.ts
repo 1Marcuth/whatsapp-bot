@@ -85,13 +85,6 @@ function formatHtmlToMarkdown(originalText: string) {
             }
         },
         {
-            markdown: "_",
-            tag: {
-                name: "em",
-                needClose: true
-            }
-        },
-        {
             markdown: "~",
             tag: {
                 name: "del",

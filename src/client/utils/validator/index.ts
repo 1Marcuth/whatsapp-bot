@@ -1,30 +1,51 @@
-import { GroupParticipant, isJidGroup } from "@adiwajshing/baileys"
 import IMessageContext from "../../interfaces/message/context"
+import { bot } from "../../settings"
 
-async function isSuperAdmin(messageContext: IMessageContext) {
-    return await validate("superadmin", messageContext)
+function isBotOwer(jid: string) {
+    return bot.owers.includes(jid)
 }
 
-async function isAdmin(messageContext: IMessageContext) {
-    return (
-        (await validate("admin", messageContext)) ||
-        (await validate("superadmin", messageContext))
+function isAdmin(
+    context: IMessageContext,
+    jid: string
+) {
+    if (jid.startsWith("@")) {
+        jid = jid.slice(1, jid.length)
+    }
+
+    const adminIds = context.group.membersList
+        ?.filter(member => member.admin)
+        .map(member => member.id)
+
+    const isAdmin = adminIds ? adminIds?.includes(jid) : false
+
+    return isAdmin
+}
+
+function isSuperAdmin(
+    context: IMessageContext,
+    jid: string
+) {
+    if (jid.startsWith("@")) {
+        jid = jid.slice(1, jid.length)
+    }
+
+    const adminIds = context.group.membersList
+        ?.filter(member => member.admin)
+        .map(member => member.id)
+
+    const isSuperAdmin = (adminIds ?
+        context.group.membersList
+            ?.find(member => member.id === jid)
+            ?.admin === "superadmin"
+        : false
     )
+
+    return isSuperAdmin
 }
 
-async function validate(
-    type: string,
-    { remoteJid, socket, userJid }: IMessageContext
-){
-    if (remoteJid &&!isJidGroup(remoteJid)) return true
-
-    const { participants } = await socket.groupMetadata(remoteJid)
-
-    const participant = participants.find(
-        (participant: GroupParticipant) => participant.id === userJid
-    )
-
-    return participant && participant.admin === type
+export {
+    isAdmin,
+    isSuperAdmin,
+    isBotOwer 
 }
-
-export { isAdmin, isSuperAdmin }

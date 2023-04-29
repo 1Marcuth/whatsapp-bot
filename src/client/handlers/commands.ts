@@ -19,11 +19,11 @@ export default async (commandsStorage: CommandsStorage) => {
                     const command = await importCommand(commandFilePath)
 
                     if (!command.name) {
-                        throw new Error(`> [client-commands-handler-error] Not valid commmand name on: ${commandFilePath}`)
+                        throw new Error(`> [client-commands-handler-error] Not valid commmand name on: ${commandFilePath}.`)
                     }
 
                     if (!command.run) {
-                        throw new Error(`> [client-commands-handler-error] Not valid command run on: ${commandFilePath}`)
+                        throw new Error(`> [client-commands-handler-error] Not valid command run on: ${commandFilePath}.`)
                     }
 
                     loadCommand(command)
@@ -31,7 +31,7 @@ export default async (commandsStorage: CommandsStorage) => {
                     function loadCommand(command: ICommand) {
                         commandsStorage.add(command)
 
-                        console.log(`> [client] Command '${command.name}' loaded`)
+                        console.log(`> [client] Command '${command.name}' loaded.`)
                     }
                 })
         })

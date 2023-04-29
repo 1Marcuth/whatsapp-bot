@@ -8,11 +8,21 @@ async function downloadImage(
     folder: string | null = null,
     ...subFolders: string[]
 ) {
-    const content = (webMessage?.message?.imageMessage ||
-        webMessage?.message?.extendedTextMessage?.contextInfo?.quotedMessage
-            ?.imageMessage) as DownloadableMessage
+    const message = webMessage.message
+    const content = (
+        message?.imageMessage ||
+        message?.extendedTextMessage?.contextInfo?.quotedMessage?.imageMessage ||
+        message?.viewOnceMessage?.message?.imageMessage ||
+        message?.extendedTextMessage?.contextInfo?.quotedMessage?.viewOnceMessage?.message?.imageMessage ||
+        message?.viewOnceMessageV2?.message?.imageMessage ||
+        message?.extendedTextMessage?.contextInfo?.quotedMessage?.viewOnceMessageV2?.message?.imageMessage ||
+        message?.viewOnceMessageV2Extension?.message?.imageMessage ||
+        message?.extendedTextMessage?.contextInfo?.quotedMessage?.viewOnceMessageV2Extension?.message?.imageMessage
+    ) as DownloadableMessage
 
-    if (!content) return null
+    if (!content) {
+        throw new Error("Message without image!")
+    }
 
     const stream = await downloadContentFromMessage(content, "image")
 
@@ -36,7 +46,7 @@ async function downloadImage(
         directory = [...directory, ...subFolders]
     }
 
-    const filePath = path.resolve(...directory, `${fileName}.jpg`)
+    const filePath = path.resolve(...directory, fileName)
 
     await fs.promises.writeFile(filePath, buffer)
 
@@ -49,11 +59,21 @@ async function downloadVideo(
     folder: string | null = null,
     ...subFolders: string[]
 ) {
-    const content = (webMessage?.message?.videoMessage ||
-        webMessage?.message?.extendedTextMessage?.contextInfo?.quotedMessage
-            ?.videoMessage) as DownloadableMessage
+    const message = webMessage.message
+    const content = (
+        message?.videoMessage ||
+        message?.extendedTextMessage?.contextInfo?.quotedMessage?.videoMessage ||
+        message?.viewOnceMessage?.message?.videoMessage ||
+        message?.extendedTextMessage?.contextInfo?.quotedMessage?.viewOnceMessage?.message?.videoMessage ||
+        message?.viewOnceMessageV2?.message?.videoMessage ||
+        message?.extendedTextMessage?.contextInfo?.quotedMessage?.viewOnceMessageV2?.message?.videoMessage ||
+        message?.viewOnceMessageV2Extension?.message?.videoMessage ||
+        message?.extendedTextMessage?.contextInfo?.quotedMessage?.viewOnceMessageV2Extension?.message?.videoMessage
+    ) as DownloadableMessage
 
-    if (!content) return null
+    if (!content) {
+        throw new Error("Message without video!")
+    }
 
     const stream = await downloadContentFromMessage(content, "video")
 
@@ -73,11 +93,11 @@ async function downloadVideo(
         directory = [...directory, folder]
     }
 
-    if (subFolders.length) {
+    if (subFolders.length > 0) {
         directory = [...directory, ...subFolders]
     }
 
-    const filePath = path.resolve(...directory, `${fileName}.mp4`)
+    const filePath = path.resolve(...directory, fileName)
 
     await fs.promises.writeFile(filePath, buffer)
 
@@ -90,11 +110,14 @@ async function downloadSticker(
     folder: string | null = null,
     ...subFolders: string[]
 ) {
-    const content = (webMessage?.message?.stickerMessage ||
-        webMessage?.message?.extendedTextMessage?.contextInfo?.quotedMessage
-            ?.stickerMessage) as DownloadableMessage
+    const content = (
+        webMessage?.message?.stickerMessage ||
+        webMessage?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.stickerMessage
+    ) as DownloadableMessage
 
-    if (!content) return null
+    if (!content) {
+        throw new Error("Message without sticker!")
+    }
 
     const stream = await downloadContentFromMessage(content, "sticker")
 
@@ -118,7 +141,55 @@ async function downloadSticker(
         directory = [...directory, ...subFolders]
     }
 
-    const filePath = path.resolve(...directory, `${fileName}.webp`)
+    const filePath = path.resolve(...directory, fileName)
+
+    await fs.promises.writeFile(filePath, buffer)
+
+    return filePath
+}
+
+async function downloadDocument(
+    webMessage: proto.IWebMessageInfo,
+    fileName: string,
+    folder: string | null = null,
+    ...subFolders: string[]
+) {
+    const message = webMessage?.message
+
+    const content = (
+        message?.documentMessage ||
+        message?.extendedTextMessage?.contextInfo?.quotedMessage?.documentMessage ||
+        message?.documentWithCaptionMessage ||
+        message?.extendedTextMessage?.contextInfo?.quotedMessage?.documentWithCaptionMessage
+    ) as DownloadableMessage
+
+    if (!content) {
+        throw new Error("Message without document!")
+    }
+
+    const stream = await downloadContentFromMessage(content, "document")
+
+    let buffer = Buffer.from([])
+
+    for await (const chunk of stream) {
+        buffer = Buffer.concat([buffer, chunk])
+    }
+
+    let directory = [__dirname, "..", "..", "..", "..", ".."]
+
+    if (!folder) {
+        directory = [...directory, ".tmp"]
+    }
+
+    if (folder) {
+        directory = [...directory, folder]
+    }
+
+    if (subFolders.length) {
+        directory = [...directory, ...subFolders]
+    }
+
+    const filePath = path.resolve(...directory, fileName)
 
     await fs.promises.writeFile(filePath, buffer)
 
@@ -128,5 +199,6 @@ async function downloadSticker(
 export {
     downloadImage,
     downloadVideo,
-    downloadSticker
+    downloadSticker,
+    downloadDocument
 }

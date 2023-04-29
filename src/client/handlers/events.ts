@@ -1,9 +1,10 @@
+import { BaileysEventMap, WASocket } from "@adiwajshing/baileys"
 import path from "path"
 import fs from "fs"
 
 import IEvent from "../interfaces/event"
 
-export default async (socket: any, kwargs: any) => {
+export default async (socket: WASocket, kwargs: any) => {
     const eventsDirPath = path.join(__dirname, "../events")
     const fileExtension = path.extname(__filename)
 
@@ -17,17 +18,17 @@ export default async (socket: any, kwargs: any) => {
                 loadOnEvent(event)
     
             } else {
-                console.error(`> [client-error] The value '${event.type}' that informed for the type of the event is invalid`)
+                console.error(`> [client-error] The value '${event.type}' that informed for the type of the event is invalid.`)
             }
 
             function loadOnEvent(event: IEvent) {
                 if (event.name !== "messages.upsert") {
-                    socket.ev.on(event.name, (context: any) => event.run(socket, context)) 
+                    socket.ev.on(event.name as keyof BaileysEventMap, (context: any) => event.run(socket, context)) 
                 } else {
-                    socket.ev.on(event.name, (context: any) => event.run(socket, context, kwargs.commands))
+                    socket.ev.on(event.name, (context: any) => event.run(socket, context, kwargs))
                 }
 
-                console.log(`> [client] Event '${event.name}' loaded`)
+                console.log(`> [client] Event '${event.name}' loaded.`)
             }
         })
 
